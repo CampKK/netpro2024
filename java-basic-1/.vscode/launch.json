@@ -1,0 +1,106 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "IfTest3",
+            "request": "launch",
+            "mainClass": "IfTest3",
+            "projectName": "java-basic-1_890873ff",
+            "args": [
+                "10"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "IfTest2",
+            "request": "launch",
+            "mainClass": "IfTest2",
+            "projectName": "java-basic-1_890873ff",
+            "args": [
+                "4"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "IfTest0",
+            "request": "launch",
+            "mainClass": "IfTest0",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "IfTest1",
+            "request": "launch",
+            "mainClass": "IfTest1",
+            "projectName": "java-basic-1_890873ff",
+            "args": [
+                "4"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "HowOldAreYou",
+            "request": "launch",
+            "mainClass": "HowOldAreYou",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "Hello5",
+            "request": "launch",
+            "mainClass": "Hello5",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "Hello4",
+            "request": "launch",
+            "mainClass": "Hello4",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "Hello3",
+            "request": "launch",
+            "mainClass": "Hello3",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "Hello2",
+            "request": "launch",
+            "mainClass": "Hello2",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "Hello",
+            "request": "launch",
+            "mainClass": "Hello",
+            "projectName": "java-basic-1_890873ff"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "HelloArgs",
+            "request": "launch",
+            "mainClass": "HelloArgs",
+            "projectName": "java-basic-1_890873ff",
+            "args": [
+                "A0",
+                "A1",
+                "A2",
+                "A3"
+            ]
+        }
+    ]
+}
