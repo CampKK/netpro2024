@@ -7,15 +7,14 @@ public class NetproLabMember {
     public static void main(String[] args) {
         int[][] members = new int[years][columns];
         Random random = new Random();
-        int randomNumber = random.nextInt(6) - 3;
         double totalRatio = 1;
         for (int i = 0; i < years; i++) {
             // 学生の総数
             members[i][0] = 120 + (random.nextInt(20) - 10);
             // 女性の割合(%)
-            members[i][1] = (int) (members[i][0] * 0.2);
+            members[i][1] = 20 + i;
             // 岩井研の人数
-            members[i][2] = 10 + randomNumber;
+            members[i][2] = 10 + (random.nextInt(7) - 3);
 
             // 男性数を求める
             int men = members[i][0] - (int) (members[i][0] * ((float) members[i][1] / 100));
@@ -29,17 +28,13 @@ public class NetproLabMember {
         System.out.println(totalRatio);
     }
 
-    // Combination 未実装
+    // Combinationの実装
     public static final long combination(final int n, int r) {
-        if (r == 0 || n == r) {
-            return 1;
+        long result = 1;
+        for (int i = 0; i < r; i++) {
+            result *= (n - i);
+            result /= (i + 1);
         }
-        long numerator = 1;
-        long denominator = 1;
-        for (int i = 1; i <= r; i++) {
-            numerator *= (n - i + 1);
-            denominator *= i;
-        }
-        return numerator / denominator;
+        return result;
     }
 }
