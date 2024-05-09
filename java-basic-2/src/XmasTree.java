@@ -1,7 +1,6 @@
 public class XmasTree {
-
     public static void main(String[] args) {
-        int N=10;
+        int N=20;
         for (int j = 0; j < N; j++) {
 
             for (int i = 0; i <= N-j; i++) {
