@@ -1,0 +1,56 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "XmasTCPServer",
+            "request": "launch",
+            "mainClass": "XmasTCPServer",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "Server",
+            "request": "launch",
+            "mainClass": "Server",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "Client",
+            "request": "launch",
+            "mainClass": "Client",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "ClassA",
+            "request": "launch",
+            "mainClass": "ClassA",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "ClassC",
+            "request": "launch",
+            "mainClass": "ClassC",
+            "projectName": "socket-1_65e3a2af"
+        }
+    ]
+}
