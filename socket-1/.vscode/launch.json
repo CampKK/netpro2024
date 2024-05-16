@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "HalloweenTCPClient",
+            "request": "launch",
+            "mainClass": "HalloweenTCPClient",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "HalloweenTCPServer",
+            "request": "launch",
+            "mainClass": "HalloweenTCPServer",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
+            "name": "XmasTCPClient",
+            "request": "launch",
+            "mainClass": "XmasTCPClient",
+            "projectName": "socket-1_65e3a2af"
+        },
+        {
+            "type": "java",
             "name": "XmasTCPServer",
             "request": "launch",
             "mainClass": "XmasTCPServer",

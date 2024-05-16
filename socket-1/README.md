@@ -16,3 +16,11 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 ## Dependency Management
 
 The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+
+
+ポート番号を入力してください (例: 5000) → 2222
+サーバーに接続しました。
+ほしいお菓子を入力してください: chocolate
+メッセージを入力してください: TrickOrTreate
+TrickOrTreate chocolateくれなきゃいたずらしちゃうぞ
+別のメッセージを送信するには 'continue' と入力し、終了するには 'quit' と入力してください:

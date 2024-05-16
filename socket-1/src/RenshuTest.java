@@ -1,5 +1,9 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Duration;
+import java.util.Random;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class RenshuTest {
@@ -83,4 +87,36 @@ class RenshuTest {
         assertFalse(renshu.swapTwoArrays(a, c)); // testing with different lengths
     }
 
+    @Test
+    void bubbleSort() {
+    int[] a = new int[]{5, 2, 3, 5, 4};
+    renshu.bubble_sort(a);
+    assertArrayEquals(new int[]{2, 3, 4, 5, 5}, a);
+}
+@Test
+    void quickSort() {
+        int[] a = new int[]{5, 2, 3, 5, 4};
+        Renshu.quickSort(a);
+        assertArrayEquals(new int[]{2, 3, 4, 5, 5}, a);
+    }
+
+    @Test
+    void quickSortShortTime() {
+        int[] a = new int[1000000];
+        Random r = new Random();
+        for (int i = 0; i < 1000000; i++) {
+            a[i] = r.nextInt(1000000);
+        }
+        Assertions.assertTimeout(Duration.ofSeconds(1), () -> { // NOTE: 1秒以内に実行できる
+            Renshu.quickSort(a);
+            assertTrue(isSorted(a)); // NOTE: ソートされている
+        });
+    }
+
+    boolean isSorted(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            if (a[i] > a[i + 1]) return false;
+        }
+        return true;
+    }
 }
