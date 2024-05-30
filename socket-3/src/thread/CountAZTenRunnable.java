@@ -50,7 +50,7 @@ public class CountAZTenRunnable implements Runnable {
 
         // この try-catch ブロックは、0 から 9 までの値を 500 ミリ秒間隔で出力するループを実行します。
         try {
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i <= 10; i++) {
                 System.out.println("main:i=" + i);
 
                 // メインスレッドを 500 ミリ秒間一時停止します。
@@ -71,7 +71,7 @@ public class CountAZTenRunnable implements Runnable {
     public void run() {
         // この try-catch ブロックは、0 から 9 までの値を 1000 ミリ秒間隔で出力するループを実行します。
         try {
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i <= 10; i++) {
                 System.out.println(myAlfabetStr + "runnable thread:i=" + i);
 
                 // スレッドを 1000 ミリ秒間一時停止します。
