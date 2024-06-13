@@ -15,7 +15,11 @@ public class MulticastClient {
             DatagramSocket socket = new DatagramSocket();
 
             // 送信するコマンドを設定
+<<<<<<< HEAD
             String command = "SOME_COMMAND";
+=======
+        String command = "TUSHINN";
+>>>>>>> e7723f5c4db321a48162b3d6ee95d454e599de1d
 
             // コマンドをバイト配列に変換して DatagramPacket を作成し、マルチキャストグループに送信
             byte[] buffer = command.getBytes();

@@ -154,7 +154,7 @@ class GUIAniMultiTCPServer2 {
 
 					}
 
-				// Clientにメッセージ送信
+				// Clientにメッセージ
 				sendout.println("Message is received at Server. Thankyou! your message is ["
 						+ line + "]");
 

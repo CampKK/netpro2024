@@ -311,3 +311,4 @@ public class SwingAnimationFaceObj extends JPanel implements ActionListener {
 	}//FaceObj End
 
 }
+//
