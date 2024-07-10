@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フルカウント・ブラックジャック</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="lobby">
+        <h1>フルカウント<br>ブラックジャック</h1>
+        <button id="startgame" type="button">ゲームスタート</button>
+        <button id="checkrules" type="button">ルール確認</button>
+        <div id="checkrulesModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>フルカウント・ブラックジャック</h3>
+                <p>ルール説明</p>
+                <p>各プレーヤーに「A～K」のトランプ13枚と白紙のカード2枚、チップ5枚を配る。</p>
+                <p>3枚で1組として5組作り自分のハンドとする。</p>
+                <p>カードの強さはブラックジャックに準じ、「A」は1か11、「J,Q,K」は10として扱う。</p>
+                <p>役の強さは「ナチュラルBJ（Aと10〜K）」が最も強く、それ以外はカードの合計が21に近い方が強い。</p>
+                <p>5つの役を各プレイヤーの任意の順で出し、各ゲームに対してベッティングを行う。</p>
+                <p>最低ベットは1枚。どちらかがフォールドした(ゲームを降りること)場合、役を開示する必要はない。5回の勝負を終えたときに多くチップを所持していた方が勝者となる。</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="setup" style="display: none;">
+        <h3>3枚で1組として5組のハンドを作成してください。</h3>
+        <div id="cards"></div>
+        <div id="handContainers">
+            <div class="handWrapper">
+                <button id="hand1" type="button">ハンド1</button>
+                <div id="hand1Container" class="handContainer"></div>
+                <p id="hand1Sum">合計: 0</p>
+            </div>
+            <div class="handWrapper">
+                <button id="hand2" type="button">ハンド2</button>
+                <div id="hand2Container" class="handContainer"></div>
+                <p id="hand2Sum">合計: 0</p>
+            </div>
+            <div class="handWrapper">
+                <button id="hand3" type="button">ハンド3</button>
+                <div id="hand3Container" class="handContainer"></div>
+                <p id="hand3Sum">合計: 0</p>
+            </div>
+            <div class="handWrapper">
+                <button id="hand4" type="button">ハンド4</button>
+                <div id="hand4Container" class="handContainer"></div>
+                <p id="hand4Sum">合計: 0</p>
+            </div>
+            <div class="handWrapper">
+                <button id="hand5" type="button">ハンド5</button>
+                <div id="hand5Container" class="handContainer"></div>
+                <p id="hand5Sum">合計: 0</p>
+            </div>
+        </div>
+        <div id="startGameContainer">
+            <button id="start" type="button">勝負開始</button>
+        </div>
+    </div>
+
+    <div id="waiting" style="display: none;">
+        <p id="waitingMessage"></p>
+    </div>
+
+    <div id="game" style="display:none;">
+        <h3>対戦開始！</h3>
+        <div id="opponentHand">相手のハンドがここに表示されます</div>
+        <div id="yourHand">
+            <h4>あなたのハンド</h4>
+            <div id="yourHandsContainer"></div>
+            <p>チップ: <span id="chips">5</span></p>
+            <button id="bet">ベット</button>
+            <button id="fold">フォールド</button>
+            <div id="chat">
+                <div id="chatMessages"></div>
+                <input id="chatInput" type="text" placeholder="メッセージを入力">
+                <button id="chatSend">送信</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="action" style="display: none;">
+        <h3>アクションを選択してください</h3>
+        <button id="bet" type="button">ベット</button>
+        <button id="fold" type="button">フォールド</button>
+        <button id="confirm" type="button">確定</button>
+        <div id="chat">
+            <div id="chatMessages"></div>
+            <input id="chatInput" type="text" placeholder="メッセージを入力">
+            <button id="chatSend">送信</button>
+        </div>
+    </div>
+
+    <div id="showdown" style="display: none;">
+        <h3>対戦結果</h3>
+        <div id="opponentHand">
+            <h4>相手のハンド</h4>
+            <div id="opponentHandContainer"></div>
+        </div>
+        <div id="yourSelectedHand">
+            <h4>あなたの選択したハンド</h4>
+            <div id="yourSelectedHandContainer"></div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js">
+    </script>
+    <script src="client.js"></script>
+</body>
+
+</html>

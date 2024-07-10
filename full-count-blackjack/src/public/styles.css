@@ -1,0 +1,173 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#lobby {
+    display: block;
+}
+
+#gamestart {
+    display: none;
+}
+
+#setup {
+    display: block;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#setup h3 {
+    text-align: center;
+}
+
+#handContainers {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.handWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+#setup button {
+    width: 100px;
+    height: 40px;
+    margin: 5px;
+}
+
+.handContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    border: 1px solid #000;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    min-width: 180px;
+    min-height: 70px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.handContainer p {
+    position: absolute;
+    bottom: -20px;
+    right: 10px;
+    margin: 0;
+}
+
+#cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.card {
+    width: 40px;
+    height: 60px;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.card.selected {
+    background-color: yellow;
+}
+
+#game {
+    display: none;
+}
+
+#chat {
+    width: 15%;
+    height: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+#chatMessages {
+    height: 80%;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fafafa;
+}
+
+#chatInput {
+    width: 70%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#chatSend {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    word-wrap: break-word;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
