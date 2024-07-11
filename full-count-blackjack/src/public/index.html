@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>フルカウント・ブラックジャック</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div id="lobby">
         <h1>フルカウント<br>ブラックジャック</h1>
@@ -74,21 +72,16 @@
             <h4>あなたのハンド</h4>
             <div id="yourHandsContainer"></div>
             <p>チップ: <span id="chips">5</span></p>
-            <button id="bet">ベット</button>
-            <button id="fold">フォールド</button>
-            <div id="chat">
-                <div id="chatMessages"></div>
-                <input id="chatInput" type="text" placeholder="メッセージを入力">
-                <button id="chatSend">送信</button>
-            </div>
         </div>
     </div>
 
-    <div id="action" style="display: none;">
-        <h3>アクションを選択してください</h3>
-        <button id="bet" type="button">ベット</button>
-        <button id="fold" type="button">フォールド</button>
-        <button id="confirm" type="button">確定</button>
+    <div id="bettime" style="display: none;">
+        <h2>ベットorフォールドtime</h2>
+        <div id="yourSelectedHand"></div>
+        <button id="betButton">ベット</button>
+        <button id="foldButton">フォールド</button>
+        <button id="confirmBet">確定</button>
+
         <div id="chat">
             <div id="chatMessages"></div>
             <input id="chatInput" type="text" placeholder="メッセージを入力">
@@ -106,11 +99,14 @@
             <h4>あなたの選択したハンド</h4>
             <div id="yourSelectedHandContainer"></div>
         </div>
+        <div id="chat">
+            <div id="chatMessages"></div>
+            <input id="chatInput" type="text" placeholder="メッセージを入力">
+            <button id="chatSend">送信</button>
+        </div>
     </div>
 
-    <script src="/socket.io/socket.io.js">
-    </script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
 </body>
-
 </html>
