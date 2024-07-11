@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (sum <= 21) {
+                    handContainers[hand].innerHTML = '';  // 既存のカードをクリア
                     newCards.forEach(card => {
                         card.classList.remove('selected');
                         handContainers[hand].appendChild(card);
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hands) {
             Object.keys(hands).forEach((hand) => {
                 const container = handContainers[hand];
+                container.innerHTML = '';  // 既存のカードをクリア
                 console.log(`container for ${hand}:`, container);  // container の内容を確認
                 hands[hand].forEach(cardValue => {
                     const card = document.createElement('div');
