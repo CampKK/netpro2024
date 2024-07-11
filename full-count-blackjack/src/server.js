@@ -85,42 +85,39 @@ io.on('connection', (socket) => {
             console.log(`Player ${socket.id} bet:`, data);
 
             if (data.action === 'fold') {
-                game.currentBet[playerIndex] = -1;  // フォールドの場合は-1
+                game.currentBet[playerIndex] = { action: 'fold' };
+                const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
+                io.to(opponentId).emit('opponentFold', data.handIndex);
             } else if (data.action === 'bet') {
-                game.currentBet[playerIndex] = data.amount || 0;  // ベット額を保存
+                game.currentBet[playerIndex] = { amount: data.amount, action: 'bet' };
+                const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
+                io.to(opponentId).emit('opponentBet', { handIndex: data.handIndex, amount: data.amount });
             } else if (data.action === 'confirm') {
-                game.betsConfirmed.push(socket.id);
+                game.betsConfirmed[playerIndex] = true;
+                const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
+                io.to(opponentId).emit('opponentBet', { handIndex: data.handIndex, amount: data.amount });
             }
 
-            if (game.betsConfirmed.length === 2) {
-                let result;
-                const player1Hand = game.hands[game.player1.id][`hand${game.currentHandIndex + 1}`];
-                const player2Hand = game.hands[game.player2.id][`hand${game.currentHandIndex + 1}`];
+            const player1Confirmed = game.betsConfirmed[0];
+            const player2Confirmed = game.betsConfirmed[1];
 
-                const player1Sum = calculateHandSum(player1Hand);
-                const player2Sum = calculateHandSum(player2Hand);
-
-                if (game.currentBet[0] === -1) {
-                    result = { winner: game.player2.id, chipsWon: game.currentBet[1], message: '相手がフォールドしました', player1Hand, player2Hand };
-                } else if (game.currentBet[1] === -1) {
-                    result = { winner: game.player1.id, chipsWon: game.currentBet[0], message: '相手がフォールドしました', player1Hand, player2Hand };
-                } else if (player1Sum > player2Sum) {
-                    result = { winner: game.player1.id, chipsWon: game.currentBet[1], message: 'あなたが勝ちました', player1Hand, player2Hand };
-                } else if (player2Sum > player1Sum) {
-                    result = { winner: game.player2.id, chipsWon: game.currentBet[0], message: 'あなたが負けました', player1Hand, player2Hand };
-                } else {
-                    result = { winner: null, chipsWon: 0, message: '引き分けです', player1Hand, player2Hand };
-                }
-
-                io.to(game.player1.id).emit('roundResult', result);
-                io.to(game.player2.id).emit('roundResult', result);
-
-                // 現在のベットをリセット
-                game.currentBet = [null, null];
-                game.betsConfirmed = [];
-            } else {
-                socket.emit('waiting', '相手のベットを待っています');
+            if (player1Confirmed && player2Confirmed) {
+                io.to(game.player1.id).emit('bothBetsConfirmed', game);
+                io.to(game.player2.id).emit('bothBetsConfirmed', game);
+                game.betsConfirmed = [false, false];  // リセット
             }
+        }
+    });
+
+    socket.on('roundResult', (result) => {
+        const gameId = getGameIdByPlayerId(socket.id);
+        if (gameId) {
+            const game = games[gameId];
+            const player1Id = game.player1.id;
+            const player2Id = game.player2.id;
+            
+            io.to(player1Id).emit('roundResult', result);
+            io.to(player2Id).emit('roundResult', result);
         }
     });
 
@@ -157,14 +154,6 @@ function getGameIdByPlayerId(playerId) {
         }
     }
     return null;
-}
-
-function calculateHandSum(hand) {
-    return hand.reduce((sum, card) => {
-        if (card === 'A') return sum + 11; // Aは11としてカウント
-        if (['J', 'Q', 'K'].includes(card)) return sum + 10;
-        return sum + parseInt(card);
-    }, 0);
 }
 
 server.listen(3000, () => {

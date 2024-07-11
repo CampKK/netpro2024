@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const showdownContainer = document.getElementById('showdown');
     const yourSelectedHandContainer = document.getElementById('yourSelectedHandContainer');
     const opponentHandContainer = document.getElementById('opponentHandContainer');
+    const currentBetContainer = document.getElementById('currentBet');
+    const chipsContainer = document.getElementById('chips');
     const handContainers = {
         hand1: document.getElementById('hand1Container'),
         hand2: document.getElementById('hand2Container'),
@@ -28,6 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chatInput');
     const chatSend = document.getElementById('chatSend');
     const chatMessages = document.getElementById('chatMessages');
+    const betButton = document.getElementById('betButton');
+    const foldButton = document.getElementById('foldButton');
+    const confirmBetButton = document.getElementById('confirmBet');
+
+    let selectedHandIndex = null;
+    let currentBet = 0;
+    let chips = 5; // 初期チップ数
 
     function openModal() {
         const modal = document.getElementById('checkrulesModal');
@@ -72,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lobbyContainer.style.display = 'none';
         waitingContainer.style.display = 'none';
         setupContainer.style.display = 'block';
+        updateChips();
     });
 
     const cardValues = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', '0', '0'];
@@ -79,8 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.classList.add('card');
         card.textContent = value;
-        card.dataset.value = value === 'A' ? '1' : value;
-        if (['J', 'Q', 'K'].includes(value)) card.dataset.value = '10';
+        card.dataset.value = (value === 'A' ? '1' : (['J', 'Q', 'K'].includes(value) ? '10' : value));
         card.addEventListener('click', () => {
             card.classList.toggle('selected');
             console.log(`Card ${value} selected`);
@@ -164,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const card = document.createElement('div');
                     card.classList.add('card');
                     card.textContent = cardValue;
+                    card.dataset.value = (cardValue === 'A' ? '1' : (['J', 'Q', 'K'].includes(cardValue) ? '10' : cardValue));
                     container.appendChild(card);
                 });
                 updateHandSum(hand);
@@ -195,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const yourHandsContainer = document.getElementById('yourHandsContainer');
     let currentHandIndex = 0;
-    let chips = 5;
     let opponentFolded = false;
 
     function displayYourHands() {
@@ -224,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
             yourHandsContainer.appendChild(handWrapper);
 
             handButton.addEventListener('click', () => {
-                const selectedHandIndex = hand; 
+                selectedHandIndex = hand; 
                 const selectedHandCards = Array.from(handContainers[hand].querySelectorAll('.card'))
                     .map(card => card.textContent);
                 console.log(`${hand} のカード情報:`, selectedHandCards);
@@ -239,11 +248,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function updateChips() {
+        chipsContainer.textContent = `残りチップ: ${chips}`;
+    }
+
+    betButton.addEventListener('click', () => {
+        if (selectedHandIndex !== null) {
+            const betAmount = parseInt(prompt('ベット額を入力してください:'));
+            if (betAmount && betAmount <= chips) {
+                currentBet += betAmount;
+                chips -= betAmount;
+                updateChips();
+                currentBetContainer.textContent = `現在のベット額: ${currentBet}`;
+                socket.emit('bet', { handIndex: selectedHandIndex, amount: currentBet, action: 'bet' });
+                socket.emit('sendMessage', `私は${betAmount}枚をベットしました。`);
+                console.log(`現在のベット額: ${currentBet}, 残りチップ数: ${chips}`);
+            } else {
+                alert('無効なベット額です。');
+            }
+        } else {
+            alert('ハンドを選択してください');
+        }
+    });
+
+    foldButton.addEventListener('click', () => {
+        if (selectedHandIndex !== null) {
+            socket.emit('bet', { handIndex: selectedHandIndex, action: 'fold' });
+            waitingContainer.style.display = 'block'; // 待機画面に移動
+            bettimeContainer.style.display = 'none';
+        } else {
+            alert('ハンドを選択してください');
+        }
+    });
+
+    confirmBetButton.addEventListener('click', () => {
+        socket.emit('bet', { handIndex: selectedHandIndex, amount: currentBet, action: 'confirm' });
+        waitingContainer.style.display = 'block'; // 待機画面に移動
+        bettimeContainer.style.display = 'none';
+        currentBet = 0; // ベット額をリセット
+        currentBetContainer.textContent = `現在のベット額: ${currentBet}`;
+    });
+
     socket.on('bothHandsConfirmed', (gameState) => {
         console.log('両プレイヤーがハンドを確定:', gameState);
         waitingContainer.style.display = 'none';
         bettimeContainer.style.display = 'block'; // ベット画面に移動
         displayYourHands();
+        displaySelectedHand();
+    });
+
+    socket.on('opponentBet', (betData) => {
+        console.log(`相手がベットしました。ハンド: ${betData.handIndex}, ベット額: ${betData.amount}`);
+        const message = document.createElement('div');
+        message.textContent = `相手が${betData.amount}枚をベットしました。`;
+        chatMessages.appendChild(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    socket.on('opponentFold', (handIndex) => {
+        opponentFolded = true;
+        console.log(`相手がフォールドしました。ハンド: ${handIndex}`);
+        const message = document.createElement('div');
+        message.textContent = `相手がフォールドしました。ハンド: ${handIndex}`;
+        chatMessages.appendChild(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    socket.on('bothBetsConfirmed', (gameState) => {
+        console.log('両プレイヤーがベットを確定:', gameState);
+        waitingContainer.style.display = 'none';
+        showdownContainer.style.display = 'block'; // 勝敗画面に移動
+        calculateWinner(gameState);
     });
 
     socket.on('roundResult', (result) => {
@@ -258,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (result.winner) {
             chips -= result.chipsWon;
         }
-        document.getElementById('chips').textContent = chips;
+        updateChips();
         
         // 自分のハンドと相手のハンドを表示
         displayShowdown(result);
@@ -266,6 +341,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // 次のラウンドに進む
         checkRoundCompletion();
     });
+
+    function displaySelectedHand() {
+        const selectedHand = Array.from(handContainers[selectedHandIndex].querySelectorAll('.card'))
+            .map(card => card.textContent);
+        const selectedHandDiv = document.getElementById('yourSelectedHand');
+        selectedHandDiv.innerHTML = '';
+        selectedHand.forEach(card => {
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            cardDiv.textContent = card;
+            selectedHandDiv.appendChild(cardDiv);
+        });
+    }
 
     function displayShowdown(result) {
         yourSelectedHandContainer.innerHTML = '';
@@ -278,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardDiv = document.createElement('div');
             cardDiv.classList.add('card');
             cardDiv.textContent = card;
+            cardDiv.dataset.value = (card === 'A' ? '1' : (['J', 'Q', 'K'].includes(card) ? '10' : card));
             yourSelectedHandContainer.appendChild(cardDiv);
         });
 
@@ -285,6 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardDiv = document.createElement('div');
             cardDiv.classList.add('card');
             cardDiv.textContent = card;
+            cardDiv.dataset.value = (card === 'A' ? '1' : (['J', 'Q', 'K'].includes(card) ? '10' : card));
             opponentHandContainer.appendChild(cardDiv);
         });
     }
@@ -299,20 +389,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    socket.on('opponentBet', (handIndex) => {
-        console.log(`相手がベットしました。ハンド: ${handIndex}`);
-    });
+    function calculateWinner(gameState) {
+        const yourHandSum = calculateHandSum(gameState.hands[socket.id][selectedHandIndex]);
+        const opponentHandSum = calculateHandSum(gameState.hands[gameState.opponentId][selectedHandIndex]);
 
-    socket.on('opponentFold', (handIndex) => {
-        opponentFolded = true;
-        console.log(`相手がフォールドしました。ハンド: ${handIndex}`);
-    });
+        let winner = null;
+        let chipsWon = 0;
 
-    socket.on('roundResult', (result) => {
-        if (result.winner === socket.id) {
-            chips += result.chipsWon;
+        if (yourHandSum > opponentHandSum) {
+            winner = socket.id;
+            chipsWon = gameState.currentBet[1].amount; // 相手のベット額を獲得
+        } else if (yourHandSum < opponentHandSum) {
+            winner = gameState.opponentId;
+            chipsWon = gameState.currentBet[0].amount; // 自分のベット額を相手が獲得
         }
-        alert(`ラウンドの結果: ${result.message}`);
-        document.getElementById('chips').textContent = chips;
-    });
+
+        socket.emit('roundResult', { winner, chipsWon, player1Hand: gameState.hands[socket.id][selectedHandIndex], player2Hand: gameState.hands[gameState.opponentId][selectedHandIndex] });
+    }
+
+    function calculateHandSum(hand) {
+        return hand.reduce((sum, card) => {
+            if (card === 'A') return sum + 11; // Aは11としてカウント
+            if (['J', 'Q', 'K'].includes(card)) return sum + 10;
+            return sum + parseInt(card);
+        }, 0);
+    }
 });
