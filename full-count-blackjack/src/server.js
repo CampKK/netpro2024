@@ -10,6 +10,7 @@ let waitingPlayer = null;
 let games = {};
 let readyPlayers = {};
 let handsConfirmedPlayers = {};
+let betsConfirmedPlayers = {};
 
 app.use(express.static('public'));
 
@@ -29,7 +30,7 @@ io.on('connection', (socket) => {
                 hands: {},
                 currentBet: [null, null],
                 waitingForBet: [],
-                betsConfirmed: [],
+                betsConfirmed: [false, false],
             };
 
             io.to(waitingPlayer.id).emit('gameStart', games[gameId]);
@@ -84,24 +85,13 @@ io.on('connection', (socket) => {
             const playerIndex = game.player1.id === socket.id ? 0 : 1;
             console.log(`Player ${socket.id} bet:`, data);
 
-            if (data.action === 'fold') {
-                game.currentBet[playerIndex] = { action: 'fold' };
-                const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
-                io.to(opponentId).emit('opponentFold', data.handIndex);
-            } else if (data.action === 'bet') {
-                game.currentBet[playerIndex] = { amount: data.amount, action: 'bet' };
-                const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
-                io.to(opponentId).emit('opponentBet', { handIndex: data.handIndex, amount: data.amount });
-            } else if (data.action === 'confirm') {
-                game.betsConfirmed[playerIndex] = true;
-                const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
-                io.to(opponentId).emit('opponentBet', { handIndex: data.handIndex, amount: data.amount });
-            }
+            game.currentBet[playerIndex] = { amount: data.amount, action: 'bet' };
+            const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
+            io.to(opponentId).emit('opponentBet', { handIndex: data.handIndex, amount: data.amount });
 
-            const player1Confirmed = game.betsConfirmed[0];
-            const player2Confirmed = game.betsConfirmed[1];
+            game.betsConfirmed[playerIndex] = true;
 
-            if (player1Confirmed && player2Confirmed) {
+            if (game.betsConfirmed[0] && game.betsConfirmed[1]) {
                 io.to(game.player1.id).emit('bothBetsConfirmed', game);
                 io.to(game.player2.id).emit('bothBetsConfirmed', game);
                 game.betsConfirmed = [false, false];  // リセット

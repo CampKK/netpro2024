@@ -45,7 +45,7 @@ body {
 
 .handContainer {
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: row;
     gap: 5px;
     border: 1px solid #000;
     padding: 5px;
@@ -180,6 +180,7 @@ body {
 
 .handContainer {
     display: flex;
+    flex-direction: row; /* カードを横並びに */
     gap: 5px;
 }
 
@@ -188,4 +189,10 @@ body {
     bottom: -20px;
     right: 10px;
     margin: 0;
+}
+
+#yourSelectedHand {
+    display: flex;
+    flex-direction: row; /* カードを横並びに */
+    gap: 5px;
 }

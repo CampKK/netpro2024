@@ -1,0 +1,12 @@
+C:\Users\apple\Desktop\netpro2024\mogiex> cmd /C "C:\pleiades\2024-03\java\21\bin\java.exe -XX:+ShowCodeDetailsInExceptionMessages -cp C:\Users\apple\Desktop\netpro2024\mogiex\bin ThreadCount10Main "
+Thread ID: 9, Counter: 1
+Thread ID: 3, Counter: 1
+Thread ID: 2, Counter: 1
+Thread ID: 4, Counter: 1
+Thread ID: 10, Counter: 1
+Thread ID: 8, Counter: 1
+Thread ID: 5, Counter: 1
+Thread ID: 7, Counter: 1
+Thread ID: 1, Counter: 1
+Thread ID: 6, Counter: 1
+Thread ID: 1, Counter: 2

@@ -1,0 +1,8 @@
+C:\Users\apple\Desktop\netpro2024\mogiex> c: && cd c:\Users\apple\Desktop\netpro2024\mogiex && cmd /C "C:\pleiades\2024-03\java\21\bin\java.exe -XX:+ShowCodeDetailsInExceptionMessages -cp C:\Users\apple\Desktop\netpro2024\mogiex\bin Client "
+数字を入力 (終了するには 'q' または 'exit' を入力): 111
+サーバからの応答: 111 is non-Prime
+数字を入力 (終了するには 'q' または 'exit' を入力): 7
+サーバからの応答: 7 is Prime
+数字を入力 (終了するには 'q' または 'exit' を入力): q
+
+c:\Users\apple\Desktop\netpro2024\mogiex>

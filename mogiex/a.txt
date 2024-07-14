@@ -1,0 +1,8 @@
+C:\Users\apple\Desktop\netpro2024\mogiex> cmd /C "C:\pleiades\2024-03\java\21\bin\java.exe -XX:+ShowCodeDetailsInExceptionMessages -cp C:\Users\apple\Desktop\netpro2024\mogiex\bin CenterKamokuManager "
+英:88
+国:41
+数:52
+社:79
+理:96
+5科目の平均は：71点
+最高点は96点の理です。

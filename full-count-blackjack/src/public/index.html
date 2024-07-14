@@ -73,15 +73,17 @@
             <div id="yourHandsContainer"></div>
             <p>チップ: <span id="chips">5</span></p>
         </div>
+        <div id="betSection" style="display:none;">
+            <h4>ベット</h4>
+            <input type="number" id="betAmountInput" placeholder="ベット額を入力">
+            <button id="betButton">ベット</button>
+        </div>
     </div>
 
     <div id="bettime" style="display: none;">
         <h2>ベットorフォールドtime</h2>
-        <div id="yourSelectedHand" class="handContainer"></div>
-        <p id="yourSelectedHandSum">合計: 0</p>
-        <p id="currentBet">現在のベット額: 0</p>
-        <p id="chips">残りチップ: 5</p>
-        <button id="betButton">ベット</button>
+        <div id="yourSelectedHand"></div>
+        <p id="yourSelectedHandSum">合計: 0</p> <!-- 合計を表示するための要素 -->
         <button id="foldButton">フォールド</button>
         <button id="confirmBet">確定</button>
 
@@ -90,6 +92,12 @@
             <input id="chatInput" type="text" placeholder="メッセージを入力">
             <button id="chatSend">送信</button>
         </div>
+    </div>
+
+    <div id="fold" style="display: none;">
+        <h2>フォールドしました</h2>
+        <p id="foldMessage"></p>
+        <button id="nextRoundButton">次のラウンドへ</button>
     </div>
 
     <div id="showdown" style="display: none;">
