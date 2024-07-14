@@ -80,20 +80,34 @@
         </div>
     </div>
 
-    <div id="bettime" style="display: none;">
-        <h2>ベットorフォールドtime</h2>
-        <div id="yourSelectedHand"></div>
-        <p id="yourSelectedHandSum">合計: 0</p> <!-- 合計を表示するための要素 -->
-        <button id="foldButton">フォールド</button>
-        <button id="confirmBet">確定</button>
-
-        <div id="chat">
-            <div id="chatMessages"></div>
-            <input id="chatInput" type="text" placeholder="メッセージを入力">
-            <button id="chatSend">送信</button>
+    <div id="gametime" style="display: none;">
+        <div id="leftSide">
+            <div id="gameInfo">
+                <h3>ゲーム情報</h3>
+                <div id="gameMessages"></div> <!-- ゲーム情報を表示するための要素 -->
+            </div>
+        </div>
+    
+        <div id="center">
+            <h2>コールorレイズorフォールドtime</h2>
+            <div id="yourSelectedHand"></div>
+            <p id="yourSelectedHandSum">合計: 0</p> <!-- 合計を表示するための要素 -->
+            <button id="foldButton">フォールド</button>
+            <button id="callButton">コール</button> <!-- コールボタン -->
+            <button id="raiseButton">レイズ</button> <!-- レイズボタン -->
+        </div>
+    
+        <div id="rightSide">
+            <div id="chat">
+                <h3>チャット</h3>
+                <div id="chatMessages"></div>
+                <input id="chatInput" type="text" placeholder="メッセージを入力">
+                <button id="chatSend">送信</button>
+            </div>
         </div>
     </div>
-
+    
+    
     <div id="fold" style="display: none;">
         <h2>フォールドしました</h2>
         <p id="foldMessage"></p>
