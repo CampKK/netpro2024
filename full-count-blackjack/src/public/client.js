@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardContainer = document.getElementById('cards');
     const foldContainer = document.getElementById('fold');
     const nextRoundButton = document.getElementById('nextRoundButton');
+    const battleButton = document.getElementById('battle');
     const showdownContainer = document.getElementById('showdown');
     const gametimeContainer = document.getElementById('gametime');
     const yourSelectedHandContainer = document.getElementById('yourSelectedHandContainer');
@@ -41,6 +42,35 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBet = 0;
     let chips = 5; // 初期チップ数
     let playerFolded = false;
+    let usedHands = []; // 使用済みハンドを保持するための配列
+
+    function openModal() {
+        var modal = document.getElementById('checkrulesModal');
+        console.log('Opening modal:', modal); // デバッグログ
+        modal.style.display = 'block';
+    }
+
+    // モーダルを閉じるための関数
+    function closeModal() {
+        var modal = document.getElementById('checkrulesModal');
+        modal.style.display = 'none';
+    }
+
+    // ボタンにクリックイベントを追加
+    var openModalBtn = document.getElementById('checkrules');
+    openModalBtn.addEventListener('click', openModal);
+    
+    // 閉じるボタンにクリックイベントを追加
+    var closeModalBtn = document.getElementsByClassName('close')[0];
+    closeModalBtn.addEventListener('click', closeModal);
+
+    // モーダル外の背景をクリックしても閉じる
+    window.addEventListener('click', function (event) {
+        var modal = document.getElementById('checkrulesModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    });
 
     document.getElementById('startgame').addEventListener('click', () => {
         const name = prompt('名前を入力してください:');
@@ -186,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const yourHandsContainer = document.getElementById('yourHandsContainer');
     let currentHandIndex = 0;
-    let opponentFolded = false;
 
     function displayYourHands() {
         yourHandsContainer.innerHTML = '';
@@ -197,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const handButton = document.createElement('button');
             handButton.textContent = `${hand}`;
             handButton.type = 'button';
+            handButton.id = `${hand}Button`;
             handWrapper.appendChild(handButton);
 
             const handContainer = document.createElement('div');
@@ -214,14 +244,18 @@ document.addEventListener('DOMContentLoaded', () => {
             yourHandsContainer.appendChild(handWrapper);
 
             handButton.addEventListener('click', () => {
-                selectedHandIndex = hand;
-                const selectedHandCards = Array.from(handContainers[hand].querySelectorAll('.card'))
-                    .map(card => card.textContent);
-                console.log(`${hand} のカード情報:`, selectedHandCards);
-                if (confirm(`${hand} で勝負しますか？`)) {
-                    console.log('ハンド確定:', selectedHandIndex, selectedHandCards);
-                    socket.emit('confirmHand', { handIndex: selectedHandIndex, cards: selectedHandCards }); // 確定したハンドをサーバーに通知
-                    displayBetSection();
+                if (!usedHands.includes(hand)) {
+                    selectedHandIndex = hand;
+                    const selectedHandCards = Array.from(handContainers[hand].querySelectorAll('.card'))
+                        .map(card => card.textContent);
+                    console.log(`${hand} のカード情報:`, selectedHandCards);
+                    if (confirm(`${hand} で勝負しますか？`)) {
+                        console.log('ハンド確定:', selectedHandIndex, selectedHandCards);
+                        socket.emit('confirmHand', { handIndex: selectedHandIndex, cards: selectedHandCards }); // 確定したハンドをサーバーに通知
+                        displayBetSection();
+                    }
+                } else {
+                    alert('このハンドは既に使用されています。');
                 }
             });
         });
@@ -283,13 +317,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 次のラウンドへボタンのイベントリスナー
         nextRoundButton.addEventListener('click', () => {
-            // 使用済みハンドを非表示にする
-            const usedHandContainer = handContainers[selectedHandIndex];
-            usedHandContainer.style.display = 'none';
+            // 使用済みハンドを「使用済み」として表示し、ボタンを無効化
+            const usedHandButton = document.getElementById(`${selectedHandIndex}Button`);
+            usedHandButton.textContent = '使用済み';
+            usedHandButton.disabled = true;
+
             foldContainer.style.display = 'none';
             gameContainer.style.display = 'none';
             gametimeContainer.style.display = 'none';
-            setupContainer.style.display = 'block'; // ハンド選択画面に戻る
+            gameContainer.style.display = 'block'; // ハンド選択画面に戻る
             resetForNextRound(); // 次のラウンドの準備
         });
 
@@ -304,6 +340,25 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('プレイヤーがこの勝負を降りました', data);
             gametimeContainer.style.display = 'none';
             foldContainer.style.display = 'block';
+        });
+
+        battleButton.addEventListener('click', () => {
+            if (confirm('勝負しますか？')) {
+                const playerHandSum = parseInt(yourSelectedHandSum.textContent.split(': ')[1]); // プレーヤーのハンドの合計値を取得
+                socket.emit('battle', { handSum: playerHandSum });
+                console.log('勝負の合計値をサーバーに送信:', playerHandSum);
+                waitingContainer.style.display = 'block';
+            }
+        });
+
+        // サーバーから勝負の結果を受け取る
+        socket.on('battleResult', (result) => {
+            console.log('勝負の結果を受け取りました:', result);
+            const gameMessages = document.getElementById('gameMessages');
+            gameMessages.textContent = result.message;
+            gametimeContainer.style.display = 'none';
+            waitingContainer.style.display = 'none';
+            showdownContainer.style.display = 'block';
         });
 
         socket.on('bothHandsConfirmed', (gameState) => {
@@ -441,20 +496,17 @@ document.addEventListener('DOMContentLoaded', () => {
             chipsContainer.textContent = chips;
         }
 
-        // 使用済みハンドを保持するための配列
-        let usedHands = [];
-
         function resetForNextRound() {
             // 使用済みハンドを追加
             usedHands.push(selectedHandIndex);
 
             // 使用可能なハンドボタンをリセット
             Object.keys(handContainers).forEach(hand => {
+                const handButton = document.getElementById(`${hand}Button`);
                 if (!usedHands.includes(hand)) {
-                    const handButton = document.getElementById(hand);
                     handButton.disabled = false;
                 } else {
-                    const handButton = document.getElementById(hand);
+                    handButton.textContent = '使用済み';
                     handButton.disabled = true;
                 }
             });
@@ -466,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ゲーム開始時、すべてのハンドボタンを有効化
         Object.keys(handContainers).forEach(hand => {
-            const handButton = document.getElementById(hand);
+            const handButton = document.getElementById(`${hand}Button`);
             handButton.disabled = false;
         });
     }
