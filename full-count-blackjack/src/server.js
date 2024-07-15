@@ -99,6 +99,17 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('fold', (data) => {
+        console.log('プレイヤーがこの勝負を降りました', data);
+        const gameId = getGameIdByPlayerId(socket.id);
+        if (gameId) {
+            const game = games[gameId];
+            const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
+            io.to(opponentId).emit('opponentFolded', { handIndex: data.handIndex });
+            socket.emit('playerFolded', { handIndex: data.handIndex });
+        }
+    });
+
     socket.on('roundResult', (result) => {
         const gameId = getGameIdByPlayerId(socket.id);
         if (gameId) {
