@@ -276,12 +276,18 @@ document.addEventListener('DOMContentLoaded', () => {
         gameContainer.style.display = 'none';
         gametimeContainer.style.display = 'none';
         gameContainer.style.display = 'block'; // ハンド選択画面に戻る
+        showdownContainer.style.display = 'none';
         resetForNextRound(); // 次のラウンドの準備
     });
 
     socket.on('battleResult', (result) => {
-        const gameMessages = document.getElementById('gameMessages');
-        gameMessages.textContent = result.message;
+        // 対戦結果を表示する
+        document.getElementById('opponentHandContainer').textContent = result.player2HandSum;
+        document.getElementById('yourSelectedHandContainer').textContent = result.player1HandSum;
+        document.getElementById('resultMessage').textContent = result.message;
+        document.getElementById('player1Points').textContent = `${result.player1Name}のポイント: ${result.player1Points}`;
+        document.getElementById('player2Points').textContent = `${result.player2Name}のポイント: ${result.player2Points}`;
+
         gametimeContainer.style.display = 'none';
         waitingContainer.style.display = 'none';
         showdownContainer.style.display = 'block';
@@ -317,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('gameOver', (data) => {
-        alert(`ゲーム終了！ 勝者は ${data.winner} です。\nプレイヤー1のポイント: ${data.player1Points}\nプレイヤー2のポイント: ${data.player2Points}`);
+        alert(`ゲーム終了！ 勝者は ${data.winner} です。\n${data.player1Name}のポイント: ${data.player1Points}\n${data.player2Name}のポイント: ${data.player2Points}`);
         location.reload();
     });
 

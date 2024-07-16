@@ -101,17 +101,16 @@
             <h4>あなたの選択したハンド</h4>
             <div id="yourSelectedHandContainer"></div>
         </div>
-        <div id="chat">
-            <div id="chatMessages"></div>
-            <input id="chatInput" type="text" placeholder="メッセージを入力">
-            <button id="chatSend">送信</button>
-        </div>
+        <p id="resultMessage"></p>
+        <p id="player1Points"></p>
+        <p id="player2Points"></p>
+        <button id="nextRoundButton">次のラウンドへ</button>
     </div>
 
     <div id="fold" style="display: none;">
         <h2>フォールドしました</h2>
         <p id="foldMessage"></p>
-        <button id="nextRoundButton">次のラウンドへ</button>
+        <button id="nextRoundButtonFold">次のラウンドへ</button>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
