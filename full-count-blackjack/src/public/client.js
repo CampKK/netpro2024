@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showdownContainer = document.getElementById('showdown');
     const gametimeContainer = document.getElementById('gametime');
     const foldContainer = document.getElementById('fold');
+    const foldNextRoundButton = document.getElementById('foldNextRoundButton');
     const yourSelectedHandContainer = document.getElementById('yourSelectedHandContainer');
     const opponentHandContainer = document.getElementById('opponentHandContainer');
     const yourSelectedHandSumContainer = document.getElementById('yourSelectedHandSum');
@@ -277,6 +278,18 @@ document.addEventListener('DOMContentLoaded', () => {
         gametimeContainer.style.display = 'none';
         gameContainer.style.display = 'block'; // ハンド選択画面に戻る
         showdownContainer.style.display = 'none';
+        resetForNextRound(); // 次のラウンドの準備
+    });
+
+    foldNextRoundButton.addEventListener('click', () => {
+        // 使用済みハンドを非表示にする
+        const usedHandContainer = handContainers[selectedHandIndex];
+        usedHandContainer.style.display = 'none';
+        foldContainer.style.display = 'none';
+        gameContainer.style.display = 'none';
+        gametimeContainer.style.display = 'none';
+        showdownContainer.style.display = 'none';
+        gameContainer.style.display = 'block'; // ハンド選択画面に戻る
         resetForNextRound(); // 次のラウンドの準備
     });
 
