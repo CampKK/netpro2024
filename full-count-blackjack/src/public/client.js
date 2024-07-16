@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game');
     const cardContainer = document.getElementById('cards');
     const battleButton = document.getElementById('battle');
+    const foldButton = document.getElementById('fold');
     const showdownContainer = document.getElementById('showdown');
     const gametimeContainer = document.getElementById('gametime');
+    const foldContainer = document.getElementById('fold');
     const yourSelectedHandContainer = document.getElementById('yourSelectedHandContainer');
     const opponentHandContainer = document.getElementById('opponentHandContainer');
     const yourSelectedHandSumContainer = document.getElementById('yourSelectedHandSum');
@@ -30,9 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chatInput');
     const chatSend = document.getElementById('chatSend');
     const chatMessages = document.getElementById('chatMessages');
-    const gameMessages = document.getElementById('gameMessages');
+    const pointsContainer = document.getElementById('points'); // ポイント表示要素
 
     let selectedHandIndex = null;
+    let points = 0; // 初期ポイント
     let usedHands = [];
 
     function openModal() {
@@ -234,7 +237,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm('勝負しますか？')) {
             const playerHandSum = parseInt(yourSelectedHandSum.textContent.split(': ')[1]);
             socket.emit('battle', { handSum: playerHandSum });
-            waitingContainer.style.display = 'block';
+        }
+    });
+
+    foldButton.addEventListener('click', () => {
+        if (confirm('フォールドしますか？')) {
+            socket.emit('fold', { handIndex: selectedHandIndex });
+            gametimeContainer.style.display = 'none';
+            foldContainer.style.display = 'block';
         }
     });
 
@@ -248,7 +258,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('bothHandsConfirmed', (gameState) => {
         waitingContainer.style.display = 'none';
+        gameContainer.style.display = 'none';
+        gametimeContainer.style.display = 'block';
         displaySelectedHand();
+    });
+
+    socket.on('opponentFolded', () => {
+        alert('相手がフォールドしました。ポイントを1獲得しました。');
+        gametimeContainer.style.display = 'none';
+        foldContainer.style.display = 'block';
+    });
+
+    document.getElementById('nextRoundButton').addEventListener('click', () => {
+        foldContainer.style.display = 'none';
+        waitingContainer.style.display = 'block';
+        socket.emit('nextRound');
     });
 
     function displaySelectedHand() {
@@ -268,7 +292,17 @@ document.addEventListener('DOMContentLoaded', () => {
         yourSelectedHandSumContainer.textContent = `合計: ${sum}`;
     }
 
-    socket.on('updateChips', (data) => {
-        updateChips();
+    socket.on('updatePoints', (data) => {
+        points = data.player1Points; // プレイヤー1のポイントを更新
+        updatePoints();
     });
+
+    socket.on('gameOver', (data) => {
+        alert(`ゲーム終了！ 勝者は ${data.winner} です。\nプレイヤー1のポイント: ${data.player1Points}\nプレイヤー2のポイント: ${data.player2Points}`);
+        location.reload();
+    });
+
+    function updatePoints() {
+        pointsContainer.textContent = points;
+    }
 });
