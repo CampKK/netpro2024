@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('game');
     const cardContainer = document.getElementById('cards');
     const battleButton = document.getElementById('battle');
-    const foldButton = document.getElementById('fold');
+    const foldButton = document.getElementById('foldButton');
     const showdownContainer = document.getElementById('showdown');
     const gametimeContainer = document.getElementById('gametime');
     const foldContainer = document.getElementById('fold');
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedHandIndex = null;
     let points = 0; // 初期ポイント
-    let usedHands = [];
+    let usedHands = []; // 使用済みハンドのリスト
 
     function openModal() {
         var modal = document.getElementById('checkrulesModal');
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var openModalBtn = document.getElementById('checkrules');
     openModalBtn.addEventListener('click', openModal);
-    
+
     var closeModalBtn = document.getElementsByClassName('close')[0];
     closeModalBtn.addEventListener('click', closeModal);
 
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
-    socket.on('updateState', (gameState) => {});
+    socket.on('updateState', (gameState) => { });
 
     socket.on('opponentDisconnected', () => {
         alert('対戦相手が切断しました。');
@@ -218,24 +218,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             yourHandsContainer.appendChild(handWrapper);
 
-            handButton.addEventListener('click', () => {
-                if (!usedHands.includes(hand)) {
-                    selectedHandIndex = hand;
-                    const selectedHandCards = Array.from(handContainers[hand].querySelectorAll('.card'))
-                        .map(card => card.textContent);
-                    if (confirm(`${hand} で勝負しますか？`)) {
-                        socket.emit('confirmHand', { handIndex: selectedHandIndex, cards: selectedHandCards });
+            // 使用済みハンドのチェック
+            if (usedHands.includes(hand)) {
+                handButton.disabled = true; // ボタンを無効化
+                handButton.textContent = `${hand} (使用済み)`; // ボタンのテキストを変更
+            } else {
+                handButton.addEventListener('click', () => {
+                    if (!usedHands.includes(hand)) {
+                        selectedHandIndex = hand;
+                        const selectedHandCards = Array.from(handContainers[hand].querySelectorAll('.card'))
+                            .map(card => card.textContent);
+                        if (confirm(`${hand} で勝負しますか？`)) {
+                            socket.emit('confirmHand', { handIndex: selectedHandIndex, cards: selectedHandCards });
+                            usedHands.push(hand); // 使用済みリストに追加
+                            handButton.disabled = true; // ボタンを無効化
+                            handButton.textContent = `${hand} (使用済み)`; // ボタンのテキストを変更
+                        }
+                    } else {
+                        alert('このハンドは既に使用されています。');
                     }
-                } else {
-                    alert('このハンドは既に使用されています。');
-                }
-            });
+                });
+            }
         });
     }
 
     battleButton.addEventListener('click', () => {
         if (confirm('勝負しますか？')) {
-            const playerHandSum = parseInt(yourSelectedHandSum.textContent.split(': ')[1]);
+            const playerHandSum = parseInt(yourSelectedHandSumContainer.textContent.split(': ')[1]);
+            waitingContainer.style.display = 'block';
             socket.emit('battle', { handSum: playerHandSum });
         }
     });
@@ -246,6 +256,27 @@ document.addEventListener('DOMContentLoaded', () => {
             gametimeContainer.style.display = 'none';
             foldContainer.style.display = 'block';
         }
+    });
+
+    socket.on('opponentFolded', (data) => {
+        alert('相手がフォールドしました。ポイントを1獲得しました。');
+        points += 1; // フォールドしていないプレイヤーのポイントを更新
+        updatePoints();
+        gametimeContainer.style.display = 'none';
+        foldContainer.style.display = 'block';
+    });
+
+    // 次のラウンドへボタンのイベントリスナー
+    const nextRoundButton = document.getElementById('nextRoundButton');
+    nextRoundButton.addEventListener('click', () => {
+        // 使用済みハンドを非表示にする
+        const usedHandContainer = handContainers[selectedHandIndex];
+        usedHandContainer.style.display = 'none';
+        foldContainer.style.display = 'none';
+        gameContainer.style.display = 'none';
+        gametimeContainer.style.display = 'none';
+        gameContainer.style.display = 'block'; // ハンド選択画面に戻る
+        resetForNextRound(); // 次のラウンドの準備
     });
 
     socket.on('battleResult', (result) => {
@@ -261,18 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gameContainer.style.display = 'none';
         gametimeContainer.style.display = 'block';
         displaySelectedHand();
-    });
-
-    socket.on('opponentFolded', () => {
-        alert('相手がフォールドしました。ポイントを1獲得しました。');
-        gametimeContainer.style.display = 'none';
-        foldContainer.style.display = 'block';
-    });
-
-    document.getElementById('nextRoundButton').addEventListener('click', () => {
-        foldContainer.style.display = 'none';
-        waitingContainer.style.display = 'block';
-        socket.emit('nextRound');
     });
 
     function displaySelectedHand() {
@@ -304,5 +323,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePoints() {
         pointsContainer.textContent = points;
+    }
+
+    function resetForNextRound() {
+        selectedHandIndex = null;
+        displayYourHands();
     }
 });

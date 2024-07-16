@@ -119,10 +119,9 @@ io.on('connection', (socket) => {
         if (gameId) {
             const game = games[gameId];
             const opponentId = game.player1.id === socket.id ? game.player2.id : game.player1.id;
-            const foldPlayer = game.player1.id === socket.id ? game.player1 : game.player2;
             const nonFoldPlayer = game.player1.id === socket.id ? game.player2 : game.player1;
 
-            nonFoldPlayer.points += 1;
+            nonFoldPlayer.points += 1; // フォールドしていないプレイヤーのポイントを増やす
 
             io.to(opponentId).emit('opponentFolded', { handIndex: data.handIndex });
             socket.emit('playerFolded', { handIndex: data.handIndex });
@@ -151,15 +150,6 @@ io.on('connection', (socket) => {
             const sender = socket.username;
             io.to(game.player1.id).emit('receiveMessage', { sender, message });
             io.to(game.player2.id).emit('receiveMessage', { sender, message });
-        }
-    });
-
-    socket.on('nextRound', () => {
-        const gameId = getGameIdByPlayerId(socket.id);
-        if (gameId) {
-            const game = games[gameId];
-            io.to(game.player1.id).emit('waiting', '次のラウンドの準備をしています');
-            io.to(game.player2.id).emit('waiting', '次のラウンドの準備をしています');
         }
     });
 
