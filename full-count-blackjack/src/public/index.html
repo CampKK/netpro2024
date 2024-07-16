@@ -16,12 +16,10 @@
                 <span class="close">&times;</span>
                 <h3>フルカウント・ブラックジャック</h3>
                 <p>ルール説明</p>
-                <p>各プレーヤーに「A～K」のトランプ13枚と白紙のカード2枚、チップ5枚を配る。</p>
+                <p>各プレーヤーに「A～K」のトランプ13枚と白紙のカード2枚を配る。</p>
                 <p>3枚で1組として5組作り自分のハンドとする。</p>
                 <p>カードの強さはブラックジャックに準じ、「A」は1か11、「J,Q,K」は10として扱う。</p>
                 <p>役の強さは「ナチュラルBJ（Aと10〜K）」が最も強く、それ以外はカードの合計が21に近い方が強い。</p>
-                <p>5つの役を各プレイヤーの任意の順で出し、各ゲームに対してベッティングを行う。</p>
-                <p>最低ベットは1枚。どちらかがフォールドした(ゲームを降りること)場合、役を開示する必要はない。5回の勝負を終えたときに多くチップを所持していた方が勝者となる。</p>
             </div>
         </div>
     </div>
@@ -71,12 +69,6 @@
         <div id="yourHand">
             <h4>あなたのハンド</h4>
             <div id="yourHandsContainer"></div>
-            <p>チップ: <span id="chips">5</span></p>
-        </div>
-        <div id="betSection" style="display:none;">
-            <h4>ベット</h4>
-            <input type="number" id="betAmountInput" placeholder="ベット額を入力">
-            <button id="betButton">ベット</button>
         </div>
     </div>
 
@@ -84,16 +76,13 @@
         <div id="leftSide">
             <div id="gameInfo">
                 <h3>ゲーム情報</h3>
-                <div id="gameMessages"></div> <!-- ゲーム情報を表示するための要素 -->
+                <div id="gameMessages"></div>
             </div>
         </div>
         <div id="center">
-            <h2>コールorレイズorフォールドtime</h2>
+            <h2>勝負time</h2>
             <div id="yourSelectedHand"></div>
-            <p id="yourSelectedHandSum">合計: 0</p> <!-- 合計を表示するための要素 -->
-            <button id="foldButton">フォールド</button>
-            <button id="callButton">コール</button> <!-- コールボタン -->
-            <button id="raiseButton">レイズ</button> <!-- レイズボタン -->
+            <p id="yourSelectedHandSum">合計: 0</p>
             <button id="battle">勝負</button>
         </div>
         <div id="rightSide">
