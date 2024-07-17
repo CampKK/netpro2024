@@ -86,47 +86,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const cardValues = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', '0', '0'];
-    cardValues.forEach(value => {
-        const card = document.createElement('div');
-        card.classList.add('card');
-        card.textContent = value;
-        card.dataset.value = (value === 'A' ? '1' : (['J', 'Q', 'K'].includes(value) ? '10' : value));
-        card.addEventListener('click', () => {
-            card.classList.toggle('selected');
-        });
-        cardContainer.appendChild(card);
+cardValues.forEach(value => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.textContent = value;
+    card.dataset.value = (value === 'A' ? '1' : (['J', 'Q', 'K'].includes(value) ? '10' : value));
+    card.addEventListener('click', () => {
+        card.classList.toggle('selected');
     });
+    cardContainer.appendChild(card);
+});
 
-    Object.keys(handContainers).forEach(hand => {
-        document.getElementById(hand).addEventListener('click', () => {
-            const selectedCards = document.querySelectorAll('.card.selected');
-            if (selectedCards.length === 3) {
-                let sum = 0;
-                const newCards = [];
-                selectedCards.forEach(card => {
-                    if (card.textContent === 'A') {
-                        const aceValue = prompt('Aを1としてカウントしますか？11としてカウントしますか？(1または11を入力)');
-                        card.dataset.value = aceValue === '11' ? '11' : '1';
-                    }
-                    newCards.push(card);
-                    sum += parseInt(card.dataset.value);
+function getCardValue(card) {
+    return parseInt(card.dataset.value);
+}
+
+Object.keys(handContainers).forEach(hand => {
+    document.getElementById(hand).addEventListener('click', () => {
+        const selectedCards = document.querySelectorAll('.card.selected');
+        if (selectedCards.length === 3) {
+            let sum = 0;
+            const newCards = [];
+            selectedCards.forEach(card => {
+                sum += getCardValue(card);
+                newCards.push(card);
+            });
+
+            if (sum <= 21) {
+                handContainers[hand].innerHTML = '';  // 既存のカードをクリア
+                newCards.forEach(card => {
+                    card.classList.remove('selected');
+                    handContainers[hand].appendChild(card);
                 });
-
-                if (sum <= 21) {
-                    handContainers[hand].innerHTML = '';  // 既存のカードをクリア
-                    newCards.forEach(card => {
-                        card.classList.remove('selected');
-                        handContainers[hand].appendChild(card);
-                    });
-                    updateHandSum(hand);
-                } else {
-                    alert('選択されたカードの合計が21を超えています。再度選択してください。');
-                }
+                updateHandSum(hand);
             } else {
-                alert('3枚のカードを選択してください');
+                alert('選択されたカードの合計が21を超えています。再度選択してください。');
             }
-        });
+        } else {
+            alert('3枚のカードを選択してください');
+        }
     });
+});
+
+function updateHandSum(hand) {
+    const cards = Array.from(handContainers[hand].children);
+    let sum = 0;
+    cards.forEach(card => {
+        sum += getCardValue(card);
+    });
+    handSums[hand].textContent = `合計: ${sum}`;
+}
+
+function updateHandSum(hand) {
+    const cards = Array.from(handContainers[hand].children);
+    let sum = 0;
+    cards.forEach(card => {
+        sum += getCardValue(card);
+    });
+    handSums[hand].textContent = `合計: ${sum}`;
+}
 
     function updateHandSum(hand) {
         const cards = Array.from(handContainers[hand].children);
@@ -363,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('gameOver', (data) => {
-        alert(`ゲーム終了！ 勝者は ${data.winner} です。\n${data.player1Name}のポイント: ${data.player1Points}\n${data.player2Name}のポイント: ${data.player2Points}`);
+        alert(`ゲーム終了！ 勝者は ${data.winner} です。`);
         location.reload();
     });
 

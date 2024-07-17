@@ -14,14 +14,17 @@
         <button id="startgame" type="button">ゲームスタート</button>
         <button id="checkrules" type="button">ルール確認</button>
         <div id="checkrulesModal" class="modal">
-            <div class="modal-content">
+            <di class="modal-content">
                 <span class="close">&times;</span>
                 <h3>フルカウント・ブラックジャック</h3>
                 <p>ルール説明</p>
                 <p>各プレーヤーに「A～K」のトランプ13枚と白紙のカード2枚を配る。</p>
                 <p>3枚で1組として5組作り自分のハンドとする。</p>
-                <p>カードの強さはブラックジャックに準じ、「A」は1か11、「J,Q,K」は10として扱う。</p>
-                <p>役の強さは「ナチュラルBJ（Aと10〜K）」が最も強く、それ以外はカードの合計が21に近い方が強い。</p>
+                <p>カードの強さはブラックジャックに準じ「J,Q,K」は10として扱う。</p>
+                <p>役の強さはカードの合計が21に近い方が強い。</p>
+                <p>一度使用したハンドは使用することは出来ない</p>
+                <p>フォールドすると相手に１ポイント追加される</p>
+                <p>各ラウンドの勝負に勝つと3ポイント獲得することができる(5ラウンド制)</p>
             </div>
         </div>
     </div>
@@ -100,7 +103,6 @@
         <p id="resultMessage"></p>
         <p id="player1Points"></p>
         <p id="player2Points"></p>
-        <p id="pointsContainer">ポイント: <span id="points">0</span></p> <!-- ポイント表示用の要素を追加 -->
         <button id="nextRoundButton">次のラウンドへ</button>
     </div>
     
