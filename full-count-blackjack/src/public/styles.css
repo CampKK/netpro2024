@@ -1,3 +1,4 @@
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -74,18 +75,27 @@ body {
 }
 
 .card {
-    width: 40px;
-    height: 60px;
-    border: 1px solid #000;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 50px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 5px;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card.selected {
-    background-color: yellow;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 0, 255, 0.5);
 }
 
 #game {
@@ -108,25 +118,40 @@ body {
     height: 80%;
     overflow-y: scroll;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 10px;
-    background-color: #fafafa;
+    background-color: #f9f9f9;
 }
 
 #chatInput {
-    width: 70%;
+    width: calc(100% - 90px);
+    margin-right: 10px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
 #chatSend {
-    padding: 10px 20px;
+    width: 70px;
+    padding: 10px;
     border-radius: 5px;
     border: none;
     background-color: #28a745;
     color: #fff;
     cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+#chatSend:hover {
+    background: linear-gradient(45deg, #45a049, #4CAF50);
+    transform: translateY(-2px);
+}
+
+#chatSend:disabled {
+    background-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .modal {
@@ -145,9 +170,31 @@ body {
 .modal-content {
     background-color: #fefefe;
     margin: 5% auto;
-    padding: 20px;
+    padding: 30px;
     border: 1px solid #888;
+    border-radius: 10px;
     width: 80%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: showModal 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.modal-header .close {
+    font-size: 1.5em;
+}
+
+.modal-body {
+    padding: 10px 0;
 }
 
 .close {
@@ -164,7 +211,17 @@ body {
     cursor: pointer;
 }
 
-/* 追加部分 */
+@keyframes showModal {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 #yourHandsContainer {
     display: flex;
     justify-content: space-around;
@@ -181,7 +238,6 @@ body {
 .handContainer {
     display: flex;
     flex-direction: row;
-    /* カードを横並びに */
     gap: 5px;
 }
 
@@ -195,11 +251,9 @@ body {
 #yourSelectedHand {
     display: flex;
     flex-direction: row;
-    /* カードを横並びに */
     gap: 5px;
 }
 
-/* ゲーム情報とチャットを左右に分けて表示するためのスタイル */
 #gametime {
     display: flex;
     justify-content: space-between;
@@ -219,11 +273,9 @@ body {
 
 .button-container {
     display: flex;
-    justify-content: center; /* ボタンを中央に揃える */
+    justify-content: center;
     gap: 20px;
-    /* ボタン間のスペース */
     margin-top: 10px;
-    /* 上部とのスペース */
 }
 
 .clearfix::after {
@@ -236,4 +288,97 @@ body {
     font-size: 1.2em;
     font-weight: bold;
     margin-top: 10px;
+}
+
+/* Responssive Design */
+@media (max-width: 768px) {
+    #handContainers {
+        flex-direction: column;
+    }
+
+    #chat {
+        width: 100%;
+        height: 30%;
+        position: relative;
+        right: 0;
+        top: auto;
+    }
+
+    #center {
+        width: 100%;
+    }
+
+    #gametime {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    #handContainers {
+        flex-direction: column;
+    }
+
+    .handWrapper {
+        width: 100%;
+    }
+
+    .handContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #chat {
+        width: 100%;
+        height: 200px;
+    }
+
+    #gametime {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #ccc;
+}
+
+body.dark-mode button {
+    background: linear-gradient(45deg, #555, #444);
+    color: #ccc;
+}
+
+body.dark-mode .modal-content {
+    background-color: #333;
+    color: #ccc;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Input Fields */
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border: 1px solid #555;
 }
