@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>フルカウント・ブラックジャック</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div id="lobby">
         <h1>フルカウント<br>ブラックジャック</h1>
@@ -69,7 +71,7 @@
         <div id="yourHand">
             <h4>あなたのハンド</h4>
             <div id="yourHandsContainer"></div>
-            <p>ポイント: <span id="points">0</span></p>
+            <p>ポイント:<span id="points">0</span></p>
         </div>
     </div>
 
@@ -78,8 +80,10 @@
             <h2>勝負time</h2>
             <div id="yourSelectedHand"></div>
             <p id="yourSelectedHandSum">合計: 0</p>
-            <button id="battle">勝負</button>
-            <button id="foldButton">フォールド</button>
+            <div class="button-container">
+                <button id="battle">勝負</button>
+                <button id="foldButton">フォールド</button>
+            </div>
         </div>
         <div id="rightSide">
             <div id="chat">
@@ -93,28 +97,24 @@
 
     <div id="showdown" style="display: none;">
         <h3>対戦結果</h3>
-        <div id="opponentHand">
-            <h4>相手のハンド</h4>
-            <div id="opponentHandContainer"></div>
-        </div>
-        <div id="yourSelectedHand">
-            <h4>あなたの選択したハンド</h4>
-            <div id="yourSelectedHandContainer"></div>
-        </div>
         <p id="resultMessage"></p>
         <p id="player1Points"></p>
         <p id="player2Points"></p>
+        <p id="pointsContainer">ポイント: <span id="points">0</span></p> <!-- ポイント表示用の要素を追加 -->
         <button id="nextRoundButton">次のラウンドへ</button>
     </div>
+    
+    
 
     <div id="fold" style="display: none;">
         <h2>フォールドしました</h2>
         <p id="foldMessage"></p>
         <button id="foldNextRoundButton">次のラウンドへ</button>
     </div>
-    
+
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
 </body>
+
 </html>

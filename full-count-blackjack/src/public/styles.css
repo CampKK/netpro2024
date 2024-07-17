@@ -180,7 +180,8 @@ body {
 
 .handContainer {
     display: flex;
-    flex-direction: row; /* カードを横並びに */
+    flex-direction: row;
+    /* カードを横並びに */
     gap: 5px;
 }
 
@@ -193,7 +194,8 @@ body {
 
 #yourSelectedHand {
     display: flex;
-    flex-direction: row; /* カードを横並びに */
+    flex-direction: row;
+    /* カードを横並びに */
     gap: 5px;
 }
 
@@ -205,63 +207,33 @@ body {
     height: 100%;
 }
 
-#leftSide {
-    width: 15%;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    overflow-y: auto;
-}
-
 #center {
     width: 55%;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin: auto;
 }
 
-#rightSide {
-    width: 15%;
-    padding-left: 10px;
+.button-container {
     display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-}
-
-#leftSide h3, #rightSide h3 {
-    margin-top: 0;
-}
-
-#gameInfo {
-    height: 100%;
-}
-
-#gameMessages {
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 80%;
-    overflow-y: auto;
-    background: #f9f9f9;
-    margin-bottom: 10px;
+    justify-content: center; /* ボタンを中央に揃える */
+    gap: 20px;
+    /* ボタン間のスペース */
+    margin-top: 10px;
+    /* 上部とのスペース */
 }
 
 .clearfix::after {
     content: "";
     display: table;
     clear: both;
+}
+
+#showdown p {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px;
 }

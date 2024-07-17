@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const yourSelectedHandContainer = document.getElementById('yourSelectedHandContainer');
     const opponentHandContainer = document.getElementById('opponentHandContainer');
     const yourSelectedHandSumContainer = document.getElementById('yourSelectedHandSum');
+    const pointsContainer = document.getElementById('points'); // ポイント表示要素
+    if (!lobbyContainer || !setupContainer || !waitingContainer || !gameContainer || !battleButton || !showdownContainer || !gametimeContainer || !pointsContainer || !yourSelectedHandSumContainer) {
+        console.error('必須の要素が見つかりません');
+        return;
+    }
     const handContainers = {
         hand1: document.getElementById('hand1Container'),
         hand2: document.getElementById('hand2Container'),
@@ -33,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chatInput');
     const chatSend = document.getElementById('chatSend');
     const chatMessages = document.getElementById('chatMessages');
-    const pointsContainer = document.getElementById('points'); // ポイント表示要素
 
     let selectedHandIndex = null;
     let points = 0; // 初期ポイント
@@ -214,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             handWrapper.appendChild(handContainer);
 
             const handSum = document.createElement('p');
-            handSum.textContent = `合計: ${handSums[hand].textContent}`;
+            handSum.textContent = ` ${handSums[hand].textContent}`;
             handWrapper.appendChild(handSum);
 
             yourHandsContainer.appendChild(handWrapper);
@@ -250,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.emit('battle', { handSum: playerHandSum });
         }
     });
+    
 
     foldButton.addEventListener('click', () => {
         if (confirm('フォールドしますか？')) {
@@ -294,17 +299,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('battleResult', (result) => {
-        // 対戦結果を表示する
-        document.getElementById('opponentHandContainer').textContent = result.player2HandSum;
-        document.getElementById('yourSelectedHandContainer').textContent = result.player1HandSum;
-        document.getElementById('resultMessage').textContent = result.message;
-        document.getElementById('player1Points').textContent = `${result.player1Name}のポイント: ${result.player1Points}`;
-        document.getElementById('player2Points').textContent = `${result.player2Name}のポイント: ${result.player2Points}`;
+        // 必要な要素が存在するか確認
+        const resultMessage = document.getElementById('resultMessage');
+        const player1Points = document.getElementById('player1Points');
+        const player2Points = document.getElementById('player2Points');
 
-        gametimeContainer.style.display = 'none';
-        waitingContainer.style.display = 'none';
-        showdownContainer.style.display = 'block';
+        if (resultMessage && player1Points && player2Points) {
+            // Update result message and points
+            resultMessage.textContent = result.message;
+            player1Points.textContent = `${result.player1Name}のポイント: ${result.player1Points}`;
+            player2Points.textContent = `${result.player2Name}のポイント: ${result.player2Points}`;
+
+            // Update points
+            if (socket.id === result.player1Id) {
+                points = result.player1Points; // Update player1 points
+            } else if (socket.id === result.player2Id) {
+                points = result.player2Points; // Update player2 points
+            }
+            updatePoints();
+            console.log('Updated points:', points);
+
+            // Show the showdown container
+            gametimeContainer.style.display = 'none';
+            waitingContainer.style.display = 'none';
+            showdownContainer.style.display = 'block';
+        } else {
+            console.error('結果表示用の要素が見つかりません');
+        }
     });
+    
 
     socket.on('bothHandsConfirmed', (gameState) => {
         waitingContainer.style.display = 'none';
@@ -331,7 +354,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     socket.on('updatePoints', (data) => {
-        points = data.player1Points; // プレイヤー1のポイントを更新
+        if (socket.id === data.player1Id) {
+            points = data.player1Points; // プレイヤー1のポイントを更新
+        } else if (socket.id === data.player2Id) {
+            points = data.player2Points; // プレイヤー2のポイントを更新
+        }
         updatePoints();
     });
 
@@ -343,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePoints() {
         pointsContainer.textContent = points;
     }
-
+    
     function resetForNextRound() {
         selectedHandIndex = null;
         displayYourHands();
