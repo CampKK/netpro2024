@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
         socket.username = name;
         if (waitingPlayer === null) {
             waitingPlayer = { id: socket.id, name: name, points: 0 };
-            socket.emit('waiting', '他のプレーヤーの参加を待っています');
+            socket.emit('waiting', '相手が準備完了するのを待っています');
         } else {
             const gameId = `game-${waitingPlayer.id}-${socket.id}`;
             games[gameId] = {
